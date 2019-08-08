@@ -1,0 +1,11 @@
+library(UniPath)
+data("human_null_model")
+data("GSE81861")
+data("human_markers_scATACseq")
+Pval = binorm(human_null_data)
+combp_ref <- combine(human_markers,human_null_data,rownames(human_null_data),Pval)
+Pval1 = binorm(data)
+combp <- combine(human_markers,data,rownames(data),Pval1)
+scores = adjust(combp,combp_ref)
+ad = scores$adjpvalog
+

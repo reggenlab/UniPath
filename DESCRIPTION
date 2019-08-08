@@ -1,0 +1,20 @@
+Package: UniPath
+Type: Package
+Title: UniPath provides robust statistical methods to represent every single cell using pathway and gene-set enrichment scores. It can be used with both single cell RNA-seq and single cell ATAC-seq profile with scalability for atlas scale data-sets. Unipath comes with several features like psuedo-temporal ordering using pathway scores and unconventional way of enumerating differences between two cell populations.
+Version: 0.1.0
+Author: Smriti Chawla, Vibhor Kumar
+Maintainer: The package maintainer <smritic@iiitd.ac.in>
+Description: UniPath is a steadfast statistical method for getting important biological insights from single cells characterized in terms of pathway activity scores and studying temporal dynamics. UniPath is a scalable platform allowing pre-processing and analysis of thousands of single cells by exploiting heterogeneity among cells and uncovering biologically relevant pathways. UniPath can help users with accurate identification of cell types, signaling pathways and doublet cells. Besides these, user can also perform clustering and pseudo temporal ordering of single cells in pathway space. This may allow analysis of relevant pathways and genes on single cell lineage transitions or potency.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.5.1)
+biocViews:
+Imports: netbiov,
+    preprocessCore,
+    GenomicRanges,
+    vegan,
+    FNN,
+    igraph
+Suggests: DrImpute, ggplot2, reshape2
+RoxygenNote: 6.1.1

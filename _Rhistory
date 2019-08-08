@@ -1,0 +1,512 @@
+corr_mst <- minimum_spanning_tree(distance)
+vertex_color  = c( 'green' , 'red')
+cell_labels = data.frame(c(rep("NSCLC TS cells",80),rep("Adherent NSCLC cells",82)))
+set.seed(50)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+###loading pathway score file for showing gradient of pathway
+set.seed(50)
+coltri = gradient(scores$adjpva, "GO_REGULATION_OF_ICOSANOID_SECRETION")
+UniPath::mst.plot.mod(corr_mst, vertex.color = coltri,mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+version
+library(UniPath)
+library(UniPath)
+library(UniPath)
+##Differential coenrichment in NSCLC  TS cells
+##load lung cancer pathway scores data
+data("lungCancer_pathway_scores")
+##Define NSCLC  TS cells in group 1
+group = c(rep(1,80),rep(2,82))
+group = as.matrix(group)
+##Perform differential coenrichment
+diff1 = difcoccur(pathwayscores,group)
+#####Two files will be generated
+pval_TS = diff1$pval
+diff_TS = diff1$dif
+##Differential coenrichment in Adherent(Adh) NSCLC cells
+data("lungCancer_pathway_scores")
+##Define Adherent NSCLC cells in group 1
+group = c(rep(2,80),rep(1,82))
+group = as.matrix(group)
+diff2 = difcoccur(pathwayscores,group)
+pval_Adh = diff2$pval
+diff_Adh = diff2$dif
+##Preprocessing of data in required for dotplot based visualization
+##Based on the p-value and difference, we will visualize differential coenrichment using dotplot created using ggplot2
+##Extract relevant coenriched pathway terms for TS cell group from both pvalue and difference files
+pval_TSpathways = melt(pval_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_TSpathways = cbind.data.frame(paste(pval_TSpathways[,1],pval_TSpathways[,2],sep="-"),pval_TSpathways[,3])
+diff_TSpathways = melt(diff_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_TSpathways = cbind.data.frame(paste(diff_TSpathways[,1],diff_TSpathways[,2],sep="-"),diff_TSpathways[,3])
+##Defining group label
+TS_group = c(rep("TS",6))
+##Combine p-value,difference and group for relevant pathways in TS cells
+TS = cbind.data.frame(pval_TSpathways,diff_TSpathways[,2],TS_group)
+colnames(TS) = c("Pathways","Pvalue","diff","group")
+##Same preprocessing in case of Adh cells as TS cells
+##Extracting same pathways from ADh group from comparison with TS cells
+pval_Adhpathways = melt(pval_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_Adhpathways = cbind.data.frame(paste(pval_Adhpathways[,1],pval_Adhpathways[,2],sep="-"),pval_Adhpathways[,3])
+diff_Adhpathways = melt(diff_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_Adhpathways = cbind.data.frame(paste(diff_Adhpathways[,1],diff_Adhpathways[,2],sep="-"),diff_Adhpathways[,3])
+Adh_group = c(rep("Adh",6))
+Adh = cbind.data.frame(pval_Adhpathways,diff_Adhpathways[,2],Adh_group)
+colnames(Adh) = c("Pathways","Pvalue","diff","group")
+##Combine TS and Adh cell data
+final = rbind(TS,Adh)
+###Using ggplot2 we will plot a dotplot showing differentially coenriched pathways in TS and Adh cells
+library(ggplot2)
+p <- ggplot() + geom_point(data=final, aes(x=group, y=Pathways, color=diff,size=Pvalue)) +
+scale_color_gradient(low="red", high="blue") + scale_fill_gradient(low="grey", high="blue") + scale_size(trans = 'reverse') + theme_light()
+library(reshape)
+##Preprocessing of data in required for dotplot based visualization
+##Based on the p-value and difference, we will visualize differential coenrichment using dotplot created using ggplot2
+##Extract relevant coenriched pathway terms for TS cell group from both pvalue and difference files
+pval_TSpathways = melt(pval_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+View(pathwayscores)
+View(pathwayscores)
+library(UniPath)
+library(UniPath)
+library(reshape)
+##Differential coenrichment in NSCLC  TS cells
+##load lung cancer pathway scores data
+data("lungCancer_pathway_scores")
+##Define NSCLC  TS cells in group 1
+group = as.matrix(c(rep(1,80),rep(2,82)))
+##Perform differential coenrichment
+diff1 = difcoccur(pathwayscores,group)
+##Two matrices will be generated
+pval_TS = diff1$pval
+diff_TS = diff1$dif
+##Differential coenrichment in Adherent(Adh) NSCLC cells
+data("lungCancer_pathway_scores")
+##Define Adherent NSCLC cells in group 1
+group = as.matrix(c(rep(2,80),rep(1,82)))
+diff2 = difcoccur(pathwayscores,group)
+pval_Adh = diff2$pval
+diff_Adh = diff2$dif
+##Preprocessing of data in required for dotplot based visualization
+##Based on the p-value and difference, we will visualize differential coenrichment using dotplot created using ggplot2
+##Extract relevant coenriched pathway terms for TS cell group from both pvalue and difference files
+pval_TSpathways = melt(pval_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_TSpathways = cbind.data.frame(paste(pval_TSpathways[,1],pval_TSpathways[,2],sep="-"),pval_TSpathways[,3])
+diff_TSpathways = melt(diff_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_TSpathways = cbind.data.frame(paste(diff_TSpathways[,1],diff_TSpathways[,2],sep="-"),diff_TSpathways[,3])
+##Defining group label
+TS_group = c(rep("TS",6))
+##Combine p-value,difference and group for relevant pathways in TS cells
+TS = cbind.data.frame(pval_TSpathways,diff_TSpathways[,2],TS_group)
+colnames(TS) = c("Pathways","Pvalue","diff","group")
+##Same preprocessing in case of Adh cells as TS cells
+##Extracting same pathways from ADh group from comparison with TS cells
+pval_Adhpathways = melt(pval_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_Adhpathways = cbind.data.frame(paste(pval_Adhpathways[,1],pval_Adhpathways[,2],sep="-"),pval_Adhpathways[,3])
+diff_Adhpathways = melt(diff_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_Adhpathways = cbind.data.frame(paste(diff_Adhpathways[,1],diff_Adhpathways[,2],sep="-"),diff_Adhpathways[,3])
+Adh_group = c(rep("Adh",6))
+Adh = cbind.data.frame(pval_Adhpathways,diff_Adhpathways[,2],Adh_group)
+colnames(Adh) = c("Pathways","Pvalue","diff","group")
+##Combine TS and Adh cell data
+final = rbind(TS,Adh)
+##Using ggplot2 we will plot a dotplot showing differentially coenriched pathways in TS and Adh cells
+library(ggplot2)
+p = ggplot() + geom_point(data=final, aes(x=group, y=Pathways, color=diff,size=Pvalue)) +
+scale_color_gradient(low="red", high="green") + scale_fill_gradient(low="grey", high="green") + scale_size(trans = 'reverse') + theme_light()
+p
+p = ggplot() + geom_point(data=final, aes(x=group, y=Pathways, color=diff,size=Pvalue)) +
+scale_color_gradient(low="red", high="blue") + scale_fill_gradient(low="grey", high="green") + scale_size(trans = 'reverse') + theme_light()
+p
+View(final)
+library(UniPath)
+library(reshape)
+##Differential coenrichment in NSCLC  TS cells
+##load lung cancer pathway scores data
+data("lungCancer_pathway_scores")
+##Define NSCLC  TS cells in group 1
+group = as.matrix(c(rep(1,80),rep(2,82)))
+##Perform differential coenrichment
+diff1 = difcoccur(pathwayscores,group)
+View(final)
+library(UniPath)
+library(reshape)
+##Differential coenrichment in NSCLC  TS cells
+##load lung cancer pathway scores data
+data("lungCancer_pathway_scores")
+##Define NSCLC  TS cells in group 1
+group = as.matrix(c(rep(1,80),rep(2,82)))
+##Perform differential coenrichment
+diff1 = difcoccur(pathwayscores,group)
+##Two matrices will be generated
+pval_TS = diff1$pval
+diff_TS = diff1$dif
+##Differential coenrichment in Adherent(Adh) NSCLC cells
+data("lungCancer_pathway_scores")
+##Define Adherent NSCLC cells in group 1
+group = as.matrix(c(rep(2,80),rep(1,82)))
+diff2 = difcoccur(pathwayscores,group)
+pval_Adh = diff2$pval
+diff_Adh = diff2$dif
+##Preprocessing of data in required for dotplot based visualization
+##Based on the p-value and difference, we will visualize differential coenrichment using dotplot created using ggplot2
+##Extract relevant coenriched pathway terms for TS cell group from both pvalue and difference files
+pval_TSpathways = melt(pval_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_TSpathways = cbind.data.frame(paste(pval_TSpathways[,1],pval_TSpathways[,2],sep="-"),pval_TSpathways[,3])
+diff_TSpathways = melt(diff_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_TSpathways = cbind.data.frame(paste(diff_TSpathways[,1],diff_TSpathways[,2],sep="-"),diff_TSpathways[,3])
+##Defining group label
+TS_group = c(rep("TS",6))
+##Combine p-value,difference and group for relevant pathways in TS cells
+TS = cbind.data.frame(pval_TSpathways,diff_TSpathways[,2],TS_group)
+colnames(TS) = c("Pathways","Pvalue","diff","group")
+##Same preprocessing in case of Adh cells as TS cells
+##Extracting same pathways from ADh group from comparison with TS cells
+pval_Adhpathways = melt(pval_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_Adhpathways = cbind.data.frame(paste(pval_Adhpathways[,1],pval_Adhpathways[,2],sep="-"),pval_Adhpathways[,3])
+diff_Adhpathways = melt(diff_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_Adhpathways = cbind.data.frame(paste(diff_Adhpathways[,1],diff_Adhpathways[,2],sep="-"),diff_Adhpathways[,3])
+Adh_group = c(rep("Adh",6))
+Adh = cbind.data.frame(pval_Adhpathways,diff_Adhpathways[,2],Adh_group)
+colnames(Adh) = c("Pathways","Pvalue","diff","group")
+##Combine TS and Adh cell data
+final = rbind(TS,Adh)
+##Using ggplot2 we will plot a dotplot showing differentially coenriched pathways in TS and Adh cells
+library(ggplot2)
+p = ggplot() + geom_point(data=final, aes(x=group, y=Pathways, color=diff,size=Pvalue)) +
+scale_color_gradient(low="red", high="blue") + scale_fill_gradient(low="grey", high="green") + scale_size(trans = 'reverse') + theme_light()
+p
+View(final)
+library(UniPath)
+library(reshape)
+##Differential coenrichment in NSCLC  TS cells
+##load lung cancer pathway scores data
+data("lungCancer_pathway_scores")
+head(pathwayscores[,1:3])
+##Define NSCLC  TS cells in group 1
+group = as.matrix(c(rep(1,80),rep(2,82)))
+##Perform differential coenrichment
+diff1 = difcoccur(pathwayscores,group)
+##Two matrices will be generated
+pval_TS = diff1$pval
+diff_TS = diff1$dif
+##Differential coenrichment in Adherent(Adh) NSCLC cells
+data("lungCancer_pathway_scores")
+##Define Adherent NSCLC cells in group 1
+group = as.matrix(c(rep(2,80),rep(1,82)))
+diff2 = difcoccur(pathwayscores,group)
+pval_Adh = diff2$pval
+diff_Adh = diff2$dif
+##Preprocessing of data in required for dotplot based visualization
+##Based on the p-value and difference, we will visualize differential coenrichment using dotplot created using ggplot2
+##Extract relevant coenriched pathway terms for TS cell group from both pvalue and difference files
+pval_TSpathways = melt(pval_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_TSpathways = cbind.data.frame(paste(pval_TSpathways[,1],pval_TSpathways[,2],sep="-"),pval_TSpathways[,3])
+diff_TSpathways = melt(diff_TS[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_TSpathways = cbind.data.frame(paste(diff_TSpathways[,1],diff_TSpathways[,2],sep="-"),diff_TSpathways[,3])
+##Defining group label
+TS_group = c(rep("TS",6))
+##Combine p-value,difference and group for relevant pathways in TS cells
+TS = cbind.data.frame(pval_TSpathways,diff_TSpathways[,2],TS_group)
+colnames(TS) = c("Pathways","Pvalue","diff","group")
+##Same preprocessing in case of Adh cells as TS cells
+##Extracting same pathways from ADh group from comparison with TS cells
+pval_Adhpathways = melt(pval_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+pval_Adhpathways = cbind.data.frame(paste(pval_Adhpathways[,1],pval_Adhpathways[,2],sep="-"),pval_Adhpathways[,3])
+diff_Adhpathways = melt(diff_Adh[c("ST_WNT_BETA_CATENIN_PATHWAY","BIOCARTA_SHH_PATHWAY","KEGG_GLYCOLYSIS_GLUCONEOGENESIS"),c("KEGG_TGF_BETA_SIGNALING_PATHWAY","KEGG_NOTCH_SIGNALING_PATHWAY")])
+diff_Adhpathways = cbind.data.frame(paste(diff_Adhpathways[,1],diff_Adhpathways[,2],sep="-"),diff_Adhpathways[,3])
+Adh_group = c(rep("Adh",6))
+Adh = cbind.data.frame(pval_Adhpathways,diff_Adhpathways[,2],Adh_group)
+colnames(Adh) = c("Pathways","Pvalue","diff","group")
+##Combine TS and Adh cell data
+final = rbind(TS,Adh)
+##Using ggplot2 we will plot a dotplot showing differentially coenriched pathways in TS and Adh cells
+library(ggplot2)
+p = ggplot() + geom_point(data=final, aes(x=group, y=Pathways, color=diff,size=Pvalue)) +
+scale_color_gradient(low="red", high="green") + scale_fill_gradient(low="grey", high="green") + scale_size(trans = 'reverse') + theme_light()
+View(final)
+View(pval_TS)
+View(pval_TSpathways)
+require(devtools)
+install_github("Smriti1990/UniPath")
+library(UniPath)
+library(UniPath)
+##Load all data files
+data("mouse_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE52583_expression_data")
+##Converting mouse null data into p-values
+Pval = binorm(mouse_null_data)
+##Converting gene expression data into p-values
+Pval1 = binorm(expression_data)
+##Combining of p-values for null model data matrix
+combp_ref = combine(c5.bp.v6.0.symbols,mouse_null_data,rownames(mouse_null_data),Pval)
+##Combining of p-values for gene expression data matrix
+combp = combine(c5.bp.v6.0.symbols,expression_data,rownames(expression_data),Pval1)
+scores = adjust(combp,combp_ref)
+library(UniPath)
+pacakge_version("devtools")
+packageVersion("devtools")
+?build_github_devtools
+??build_github_devtools
+library(UniPath)
+library(UniPath) ###define own colors
+library(UniPath)
+data("human_null_model")
+library(UniPath)
+##Load all data files
+data("mouse_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE52583_expression_data")
+##Converting mouse null data into p-values
+Pval = binorm(mouse_null_data)
+##Converting gene expression data into p-values
+Pval1 = binorm(expression_data)
+##Combining of p-values for null model data matrix
+combp_ref = combine(c5.bp.v6.0.symbols,mouse_null_data,rownames(mouse_null_data),Pval)
+##Combining of p-values for gene expression data matrix
+combp = combine(c5.bp.v6.0.symbols,expression_data,rownames(expression_data),Pval1)
+scores = adjust(combp,combp_ref)
+distclust = dist_clust(scores$adjpvalog,4)
+dist = distclust$distance
+clusters = distclust$clusters
+##Specifying number of top k nearest neighbor
+index = index(scores$adjpvalog,5)
+dist = distclust$distance
+clusters = distclust$clusters
+##Specifying number of top k nearest neighbor
+index = index(scores$adjpvalog)
+index
+library(UniPath)
+##Load all data files
+data("mouse_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE52583_expression_data")
+##Combining of p-values for null model data matrix
+combp_ref = combine(c5.bp.v6.0.symbols,mouse_null_data,rownames(mouse_null_data),Pval)
+##Combining of p-values for gene expression data matrix
+combp = combine(c5.bp.v6.0.symbols,expression_data,rownames(expression_data),Pval1)
+##Converting mouse null data into p-values
+Pval = binorm(mouse_null_data)
+##Converting gene expression data into p-values
+Pval1 = binorm(expression_data)
+##Combining of p-values for null model data matrix
+combp_ref = combine(c5.bp.v6.0.symbols,mouse_null_data,rownames(mouse_null_data),Pval)
+##Combining of p-values for gene expression data matrix
+combp = combine(c5.bp.v6.0.symbols,expression_data,rownames(expression_data),Pval1)
+dist = distclust$distance
+clusters = distclust$clusters
+##Specifying number of top k nearest neighbor
+index = index(scores$adjpvalog)
+scores = adjust(combp,combp_ref)
+dist = distclust$distance
+clusters = distclust$clusters
+##Specifying number of top k nearest neighbor
+index = index(scores$adjpvalog)
+distclust = dist_clust(scores$adjpvalog,4)
+dist = distclust$distance
+clusters = distclust$clusters
+##Specifying number of top k nearest neighbor
+index = index(scores$adjpvalog)
+head(ndex)
+head(index)
+library(UniPath)
+library(UniPath)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("data/GSE75748pathwayscores")
+data("GSE75748pathwayscores")
+scores$adjpvalog = GSE75748pathwayscores
+setwd("G:\\GSE75748\\new_filtered_pathways")
+scores$adjpvalog = read.table("filtered_adjpva_log.csv",sep=",",header=T,stringsAsFactors = F,row.names = 1)
+scores = read.table("filtered_adjpva_log.csv",sep=",",header=T,stringsAsFactors = F,row.names = 1)
+x = scores
+x = read.table("filtered_adjpva_log.csv",sep=",",header=T,stringsAsFactors = F,row.names = 1)
+scores$adjpvalog = x
+library(UniPath)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE75748pathwayscores")
+Pval = binorm(human_null_data)
+combp_ref = combine(c5.bp.v6.0.symbols,human_null_data,rownames(human_null_data),Pval)
+library(UniPath)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distanc
+clusters = distclust$clusters
+index = index(scores$adjpvalog,4)
+KNN = KNN(scores$adjpvalog,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+library(UniPath)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distanc
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color  = c(rep("yellow",92),rep("Red",102),rep("green",66),rep("blue",172),rep("black",138),rep("magenta",188))
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+4436-4381
+library(UniPath)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distanc
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,5)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+data("human_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+document()
+devtools::document()
+library(UniPath)
+library(UniPath)
+library(UniPath)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+head(GSE75748pathwayscores[,1:4])
+index = index(GSE75748pathwayscores,4)
+index = index(GSE75748pathwayscores,k=4)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,k=4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+View(index)
+library(UniPath)
+distclust = dist_clust(GSE75748pathwayscores,6)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+set.seed(50)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+set.seed(50)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+set.seed(100)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+library(UniPath)
+data("GSE75748pathwayscores")
+distclust = dist_clust(GSE75748pathwayscores,6)
+dist = distclust$distance
+clusters = distclust$clusters
+index = index(GSE75748pathwayscores,4)
+KNN = KNN(GSE75748pathwayscores,index,clusters)
+class = class1(clusters,KNN)
+distance = distance(dist,class,clusters)
+corr_mst = minimum_spanning_tree(distance)
+vertex_color = c("yellow","Red","green","blue","black","magenta")
+cell_labels  = data.frame(c(rep("0h",92),rep("12h",102),rep("24h",66),rep("36h",172),rep("72h",138),rep("96h",188)))
+set.seed(100)
+UniPath::mst.plot.mod(corr_mst, vertex.color = vertex_color[cell_labels[,1]],mst.edge.col="black",bg="white",layout.function="layout.kamada.kawai",v.size = 3,e.size=0.005,mst.e.size = 0.005)
+legend("topright", legend = sort(unique(cell_labels[,1])) , col = vertex_color,pch=20, box.lty=0,cex=1,pt.cex=2,horiz=F)
+data("human_null_model")
+save(human_null_data,file="data/human_null_model.RData")
+data("human_null_model")
+human_null_data = round(human_null_data,5)
+save(human_null_data,file="data/human_null_model.RData")
+data("human_null_model")
+human_null_data = round(human_null_data,5)
+save(human_null_data,file="human_null_model.RData")
+version

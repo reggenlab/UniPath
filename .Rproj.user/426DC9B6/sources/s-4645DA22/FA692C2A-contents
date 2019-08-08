@@ -1,0 +1,19 @@
+library(UniPath)
+##Load all data files
+data("mouse_null_model")
+data("c5.bp.v6.0.symbols")
+data("GSE52583_expression_data")
+##Converting mouse null data into p-values
+Pval = binorm(mouse_null_data)
+##Converting gene expression data into p-values
+Pval1 = binorm(expression_data)
+##Combining of p-values for null model data matrix
+combp_ref = combine(c5.bp.v6.0.symbols,mouse_null_data,rownames(mouse_null_data),Pval)
+##Combining of p-values for gene expression data matrix
+combp = combine(c5.bp.v6.0.symbols,expression_data,rownames(expression_data),Pval1)
+scores = adjust(combp,combp_ref)
+data = scores$adjpvaraw
+
+group = as.matrix(c(rep(2,81),rep(2,44),rep(1,46),rep(2,23)))
+
+wilx = temporaldif(data,group)
