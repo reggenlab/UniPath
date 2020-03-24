@@ -1,7 +1,7 @@
 
 #' Finding how many times nearest neighbor of cells in each class are belonging to different cluster or class.
 #'
-#' @param  Clusters obtained from hierarchal clustering
+#' @param  Clusters  clusters obtained from hierarchal clustering
 #' @param  KNN Matrix obtained from KNN function with cluster number for top nearest neighbors for each of the cell
 #'
 #' @return Matrix with number of times cells in same class have top k neighbors in other classes

@@ -43,17 +43,18 @@ combinePValues <- function(covar_matrix, p_values, extra_info = FALSE){
 
 #' Combining P values
 #'
-#' @param gene_file Pre compiled pathway annotation file
+#' @param gene_file pathway annotation file/gene-set file
 #' @param expression_matrix gene expression matrix
-#' @param gnames rownames of gene expression matrix
+#' @param gnames gene names of expression matrix
 #' @param Pval1 P-value matrix obtained using binorm
+#' @param thr  Based on threshold provided, those gene sets having number of genes greater than the threshold value will to be considered for covariance matrix calculation and combining of p values
 #'
 #' @return Combined P-value matrix
 #' @export
 #'
 #' @examples
 #' combine()
-combine <- function(gene_file,expression_matrix,gnames,Pval1){
+combine <- function(gene_file,expression_matrix,gnames,Pval1,thr=2){
   combp <- matrix(0,nrow(gene_file),ncol(expression_matrix), dimnames=list(rownames(gene_file),colnames(expression_matrix)))
   gene_file = data.frame(apply(gene_file,2,toupper))
   rownames(expression_matrix) = toupper(rownames(expression_matrix))
@@ -79,7 +80,7 @@ combine <- function(gene_file,expression_matrix,gnames,Pval1){
 
       for (j in 1:nrow(plocal)){
         gpos = which(exprlocal[,j] > 0) ;
-        if( nrow(as.matrix(gpos)) > 2) {
+        if( nrow(as.matrix(gpos)) > thr) {
           lcovar = covar_matrix[ gpos, gpos] ;
           temp = combinePValues( lcovar, p_values=plocal[j,gpos], extra_info=TRUE)
           combp[i,j] = -log2(temp$P_test)

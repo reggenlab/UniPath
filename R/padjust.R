@@ -1,9 +1,9 @@
 #' Adjusting of combine p-values using null model
 #'
-#' @param combp combined p-value matrix obtaing using gene expression matrix
-#' @param combp_ref combined p-value matrix obtaing using null model
+#' @param combp combined p-value matrix obtained using gene expression matrix
+#' @param combp_ref combined p-value matrix obtained using null model
 #'
-#' @return A list of three dataframes, One is adjusted p-value datafrmae, second is raw p-value data frame and third is log tranformed p-value data frame
+#' @return A list of 3 matrices, One is absolute p-value matrix, second is raw adjusted p-value matrix and third is log transformed adjusted p-value matrix
 #' @export
 #'
 #' @examples

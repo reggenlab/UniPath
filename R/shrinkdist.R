@@ -1,8 +1,8 @@
 #' Two level shrinkage of distance matrix based on nearest neighbour indices and belongingness of cells to same class
 #'
-#' @param dist Distance matrix used for hierarchal clustering
+#' @param dist Distance matrix used for hierarchical clustering
 #' @param class Matrix with number of times cells in same class have top k neighbors in other classes
-#' @param clusters clusters obtained from hierarchal clustering
+#' @param clusters clusters obtained from hierarchical clustering
 #'
 #' @return shrinked distance matrix
 #' @export

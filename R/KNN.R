@@ -1,6 +1,6 @@
 #' Getting cluster numbers for each of the nearest neighbor of a cell
 #'
-#' @param pathwayscores Raw adjusted p-value matrix
+#' @param pathwayscores log transformed adjusted p-value matrix
 #' @param index indices of nearest neighbours obtained from index function
 #' @param clusters Clusters obtained from hierarchal clustering
 #'

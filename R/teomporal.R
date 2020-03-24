@@ -1,6 +1,6 @@
 #' Differential Pathways
 #'
-#' @param data adjusted raw p-value matrix
+#' @param data Adjusted raw p-values matrix
 #' @param group group of cell types among which differential pathway analysis needs to be performed.
 #'
 #' @return A list containing p-value based on wilcoxon rank sum test, fold change based on mean and median
@@ -32,9 +32,6 @@ FC1[j,i] = median(data[j,pos]) - median(data[j, pos1]) ;
 
 }
 
-#rownames(wilk) = unique(group) ;
-#rownames(FC) = unique(group) ;
-#rownames(FC1) = unique(group) ;
 return( list(wilk=wilk, FC=FC, FC1 = FC1)) ;
 
 }

@@ -1,5 +1,5 @@
 #' Finding K nearest neighbour
-#' @param pathwayscores Raw adjusted p-value matrix
+#' @param pathwayscores log transformed adjusted p-value matrix
 #' @param k Number of k nearest neighbour for each sample or cell
 #'
 #' @return matrix of indices of nearest neighbour

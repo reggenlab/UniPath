@@ -1,6 +1,6 @@
-#' Showing gradient or continuum of pathways on minimum spanning tree
+#' Creating gradient of colors for showing continuum of single pathway on minimum spanning tree
 #'
-#' @param pathwayfile adjusted p-value matrix
+#' @param pathwayfile Adjusted p-values matrix
 #' @param term Pathway term for which gradient needs to be plotted
 #'
 #' @return gradient of colors for specific pathway term

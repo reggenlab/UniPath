@@ -1,8 +1,9 @@
 #' Generation of foreground file
 #'
-#' @param arg1 genomic coordinate file
-#' @param arg2 human reference genome file
-#' @param arg3 output file
+#' @param arg1 nearestGenes.pl script
+#' @param arg2 genomic coordinate file
+#' @param arg3 human reference genome file
+#' @param arg4 output file
 #'
 #' @return foreground file
 #' @export

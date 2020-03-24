@@ -1,19 +1,20 @@
 #' Calculating pathway enrichment scores for scATAC-seq profiles
 #'
-#' @param gmtFile gene-set file
+#' @param gmtFile pathway annotation/gene-set file
 #' @param BGfile background file
 #' @param countFile scATAC-seq count matrix
 #' @param method If method is chosen as 1, data normalization is performed using global accessibility scores. If selected method is 2 then local accessibility score-based normalization is performed
 #' @param globalaccessibility_scores  global accessibility scores for input count data matrix
 #' @param FGfile foreground file
 #' @param promoters whether promoters to be used or not for conversion of scATAC-seq profiles to pathway scores. Default is false
-#'
-#' @return A list containing two dataframes, One dataframe contains p-values based on hypergeometric test and other one is p-values based on binomial test
+#' @param dist  distance to be used for considering nearest gene to a peak
+#' @param threshold Peaks above the given threshold value are chosen to be in a foreground set
+#' @return A list containing two matrices, One matrix contains p-values based on hypergeometric test and other one is p-values based on binomial test
 #' @export
 #'
 #' @examples
 #' runGO()
-runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,FGfile,promoters = FALSE)
+runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,FGfile,promoters = FALSE,dist=1000000,threshold=1.25)
 {
   ganot = gmtFile
   #ganot = read.table( gmtFile,fill=TRUE,sep="\t",flush=TRUE,stringsAsFactors=F,row.names = 1)
@@ -29,8 +30,8 @@ runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,
     if(bgd1[i] < bgd2[i]) { bgc1[i] = bgc2[i] ; bgd1[i] = bgd2[i]  ; }
   }
 
-  if(promoters == TRUE ) { pos = which(bgd1 < 1000000) ; }
-  if(promoters == FALSE) { pos = which((bgd1 < 1000000)& (bgd1 > 1000) ) ;}
+  if(promoters == TRUE ) { pos = which(bgd1 < dist) ; }
+  if(promoters == FALSE) { pos = which((bgd1 < dist)& (bgd1 > 1000) ) ;}
 
   bfc = bgc1[pos]
   bfc = as.matrix(bfc)
@@ -79,8 +80,8 @@ runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,
     if(fgd1[i] < fgd2[i]) { fgc1[i] = fgc2[i] ; fgd1[i] = fgd2[i]  ; }
   }
 
-  if(promoters == TRUE) { pos = which(fgd1 < 1000000) ;}
-  if(promoters == FALSE) { pos = which((fgd1 < 1000000)& (fgd1 > 1000) ) ; }
+  if(promoters == TRUE) { pos = which(fgd1 < dist) ;}
+  if(promoters == FALSE) { pos = which((fgd1 < dist)& (fgd1 > 1000) ) ; }
 
   fgd1 = fgd1[pos] ; fgc1 = fgc1[pos] ;
   tagcount = tagcount[pos,] ;
@@ -100,7 +101,7 @@ runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,
   {
     #thr[fgs] = quantile(tagcount[, fgs] , probs=0.80) ;
     #pos1 = which(tagcount[,fgs] > thr[fgs]) ;
-    pos1 = which(tagcount[,fgs] > 1.25) ;
+    pos1 = which(tagcount[,fgs] > threshold) ;
     alln[fgs] = length(pos1) ;
   }
   fgNum = nrow(tagcount) ;
@@ -120,7 +121,7 @@ runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,
 
 
     for( fgs in 1:ncol(tagcount)){
-      pos = which(ltagcount[,fgs] > 1.25) ;
+      pos = which(ltagcount[,fgs] > threshold) ;
       #pos = which(ltagcount[,fgs] > thr[fgs]) ;
 
       k = length(pos) ;
@@ -156,8 +157,8 @@ if (method==2){
     if(fgd1[i] < fgd2[i]) { fgc1[i] = fgc2[i] ; fgd1[i] = fgd2[i]  ; }
   }
 
-  if(promoters == TRUE) { pos = which(fgd1 < 1000000) ;}
-  if(promoters == FALSE) { pos = which((fgd1 < 1000000)& (fgd1 > 1000) ) ; }
+  if(promoters == TRUE) { pos = which(fgd1 < dist) ;}
+  if(promoters == FALSE) { pos = which((fgd1 < dist)& (fgd1 > 1000) ) ; }
 
   fgd1 = fgd1[pos] ; fgc1 = fgc1[pos] ;
   tagcount = tagcount[pos,] ;
@@ -177,7 +178,7 @@ if (method==2){
   {
     #thr[fgs] = quantile(tagcount[, fgs] , probs=0.80) ;
     #pos1 = which(tagcount[,fgs] > thr[fgs]) ;
-    pos1 = which(tagcount[,fgs] > 1.25) ;
+    pos1 = which(tagcount[,fgs] > threshold) ;
     alln[fgs] = length(pos1) ;
   }
   fgNum = nrow(tagcount) ;
@@ -197,7 +198,7 @@ if (method==2){
 
 
     for( fgs in 1:ncol(tagcount)){
-      pos = which(ltagcount[,fgs] > 1.25) ;
+      pos = which(ltagcount[,fgs] > threshold) ;
       #pos = which(ltagcount[,fgs] > thr[fgs]) ;
 
       k = length(pos) ;

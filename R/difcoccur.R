@@ -1,9 +1,9 @@
-#' Differential coenriched pathways
+#' Differential cooccurrence pathway analysis
 #'
-#' @param data Raw p-value pathway score matrix
+#' @param data Adjusted raw p-values matrix
 #' @param group group 1 for cells of interest and rest in group 2
 #'
-#' @return A list containing matrix of p-values and difference among the groups
+#' @return A list containing matrices of p-values and difference in pathway pairs among the groups
 #' @export
 #'
 #' @examples
