@@ -17,12 +17,11 @@
 runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,FGfile,promoters = FALSE,dist=1000000,threshold=1.25)
 {
   ganot = gmtFile
-  #ganot = read.table( gmtFile,fill=TRUE,sep="\t",flush=TRUE,stringsAsFactors=F,row.names = 1)
 
   bgfile = read.table( BGfile , header=FALSE, stringsAsFactors = F) ;
-  bgc1 = as.matrix(bgfile[,1]) ;
+  bgc1 = as.matrix(toupper(bgfile[,1])) ;
   bgd1 = as.matrix(bgfile[,2]) ;
-  bgc2 = as.matrix(bgfile[,3]) ;
+  bgc2 = as.matrix(toupper(bgfile[,3])) ;
   bgd2 = as.matrix(bgfile[,4]) ;
 
   for (i in 1:length(bgc1))
@@ -59,20 +58,16 @@ runGO  <- function ( gmtFile,BGfile,countFile,method,globalaccessibility_scores,
 
 
 
-  #########################  for Foreground analysis
 
   ######################reading data #################
   if (method==1){
   tagcount = read.table(countFile ,sep=",",header=T,stringsAsFactors=F,row.names = 1)
-  #globalaccess = read.table(globalaccess,sep=",")[,1]
-
-
   tagcount = (tagcount/(globalaccess+.01))
 
   fgfile = read.table( FGfile , header=FALSE) ;
-  fgc1 = as.matrix(fgfile[,1])
+  fgc1 = as.matrix(toupper(fgfile[,1]))
   fgd1 = as.matrix(fgfile[,2])
-  fgc2 = as.matrix(fgfile[,3])
+  fgc2 = as.matrix(toupper(fgfile[,3]))
   fgd2 = as.matrix(fgfile[,4])
 
   for (i in 1:length(fgc1))
