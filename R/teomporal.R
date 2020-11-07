@@ -13,6 +13,7 @@ temporaldif <- function( data , group)
 clases = unique(group) ;
 data[is.na(data)] = 1 ;
 data = -log2(data + 1E-20) ;
+#data = log2(data+1)
 wilk = matrix(1, nrow(data) , length(clases)) ;
 FC = wilk ; FC1 = wilk ;
 rownames(wilk) = rownames(data) ;
